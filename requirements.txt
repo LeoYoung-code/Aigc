@@ -1,0 +1,10 @@
+# 核心依赖
+rich>=13.0.0
+sympy>=1.12.0
+
+# 各AI模型SDK
+openai>=1.0.0
+google-generativeai>=0.3.0
+mistralai>=0.0.10
+volcengine-python-sdk[ark]>=1.0.0
+
