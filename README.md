@@ -49,8 +49,31 @@
 ## 快速开始 安装依赖
 
 ### 使用requirements.txt安装依赖（推荐）
-```shell
-    python -m pip install -r requirements.txt
+1. 安装 uv（一个快速的 Python 包管理器）：
+```bash
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+2. 克隆仓库：
+
+```bash
+    git clone https://github.com/LeoYoung-code/Aigc.git
+    cd Aigc
+```
+
+3. 创建并激活虚拟环境：
+
+```bash
+    uv venv
+    source .venv/bin/activate  # Unix/macOS 系统
+    # Windows 系统使用：
+    # .venv\Scripts\activate
+```
+
+4. 安装依赖：
+
+```bash
+    uv pip install -r requirements.txt
 ```
 
 ### 手动安装依赖SDK（按需安装）
@@ -62,7 +85,10 @@
     # 验证SDK 依赖包
     # python -c 'import openai; print("version =",openai.__version__)'
     
-    # 总结脑图生成(可选，需要总结为脑图功能安装)
+```
+
+### 总结脑图生成 (可选，需要总结为脑图功能安装)
+```shell
     brew install node
     node -v
     npm -v
@@ -89,5 +115,21 @@ MODEL_GENERATE_MIND = "c"
 
 ## 新增模型
 项目使用工厂模式 , 你只需要添加一个模型类和修改 config.py 中的配置即可
+```python
+    # 定义类映射配置
+        class_map_config: Dict[str, Type["ClassInterface"]] = {
+            "a": DipuDada,
+            "b": BaiLian,
+            "c": DouBao256kModel,
+            "d": DeepSeekArk,
+            "e": Moonshot,
+            "f": Mistral,
+            "j": OpenAI,
+            "h": SiliconFlow,
+            "g": Gemini,
+            "i": DeepSeek,
+            "k": QwqPlus,
+        }
+```
 
 ## 根据上述 demo 开始愉快玩耍吧😄
