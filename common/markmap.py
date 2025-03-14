@@ -87,6 +87,9 @@ def markdown_to_markmap(markdown_text, prefix="模型总结"):
     Returns:
         tuple: (生成的思维导图HTML文件路径, 命令执行状态码, 命令输出信息)
     """
+    if markdown_text is None or markdown_text.strip() == "":
+        raise ValueError("Markdown文本内容不能为空")
+
     # 先保存Markdown文件
     md_file_path = save_markdown_to_file(markdown_text, prefix)
     

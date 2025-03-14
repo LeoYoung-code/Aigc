@@ -7,6 +7,8 @@ from abc import ABC, abstractmethod
 from typing import Type, Dict, Literal, Optional
 from termcolor import colored
 import config
+import shutil
+
 
 _CONSOLE = Console()
 
@@ -38,10 +40,30 @@ def markdown_chunk(chunk):
     return chunk
 
 
+def print_parting_line(text = "这是一条分割线"):
+    # 自动获取终端的列数
+    terminal_width = shutil.get_terminal_size().columns
+
+    # 计算左右两侧分割线的长度
+    left_length = (terminal_width - len(text) - 2) // 2
+    right_length = terminal_width - left_length - len(text) - 2
+
+    # 生成左右两侧的分割线
+    left_line = "=" * left_length
+    right_line = "=" * (right_length -  len(text))
+
+    # 组合分割线和文本
+    output_text = f"{left_line} {text} {right_line}"
+
+    # 打印输出
+    _CONSOLE.print(Text(output_text, style="yellow  bold"))
+
+
 def print_stream(stream):
     resp_think = []
     resp_conclusion = []
-    _CONSOLE.print(Text("\n╰─❯ 大模型响应:", style="yellow underline bold"))
+    # _CONSOLE.print(Text("\n╰─❯ 大模型响应:", style="yellow underline bold"))
+    print_parting_line("大模型响应")
     with Live(console=_CONSOLE, refresh_per_second=8, auto_refresh=True, vertical_overflow="visible") as live_content:
         think_text = ""
         conclusion_text = ""
