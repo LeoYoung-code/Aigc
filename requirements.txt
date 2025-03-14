@@ -2,6 +2,9 @@
 rich>=13.0.0
 sympy>=1.12.0
 httpx~=0.27.0
+mcp~=1.1.2
+termcolor~=2.4.0
+psutil~=5.9.5
 
 # 各AI模型SDK
 openai>=1.0.0

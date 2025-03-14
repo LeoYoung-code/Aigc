@@ -19,7 +19,7 @@ def req(conclusion=None):
     try:
         text = ""
         for chunk in response:
-            print(chunk.text)
+            common.markdown_stream(chunk.text)
             text += chunk.text
         return common.print_conclusion_md(text)
     except Exception as e:

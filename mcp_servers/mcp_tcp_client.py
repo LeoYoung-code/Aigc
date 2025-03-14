@@ -2,7 +2,7 @@ import json
 import socket
 from typing import Any, Dict, List, Tuple
 
-from console_gpt.custom_stdout import custom_print
+from common.common import custom_print
 
 from .mcp_errors import MCPError
 from .server_manager import ServerManager
