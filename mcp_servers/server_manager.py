@@ -8,7 +8,7 @@ from typing import Optional, Tuple
 
 import psutil
 
-from console_gpt.custom_stdout import custom_print
+from common.common import custom_print
 
 
 class ServerManager:
