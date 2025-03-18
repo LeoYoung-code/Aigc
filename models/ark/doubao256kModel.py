@@ -8,7 +8,6 @@ client = Ark(
     timeout=httpx.Timeout(timeout=1800),
 )
 
-
 def get_stream(content):
     return client.chat.completions.create(
         model="doubao-1-5-pro-256k-250115",
@@ -19,18 +18,14 @@ def get_stream(content):
         stream=True
     )
 
-def req(conclusion=None):
-    try:
-        content = common.get_input(conclusion)
-        stream = get_stream(content)
-        return common.print_stream(stream)
-    except Exception as e:
-        print(f'{type(e).__name__}: {e}')
-
-
 class DouBao256kModel(ClassInterface):
     def initialize(self):
         print("正在使用Doubao-1.5-pro-256k 支持256k上下文窗口的推理")
 
     def request(self, conclusion=None):
-        return req(conclusion)
+        try:
+            content = common.get_input(conclusion)
+            stream = get_stream(content)
+            return common.print_stream(stream)
+        except Exception as e:
+            print(f'{type(e).__name__}: {e}')

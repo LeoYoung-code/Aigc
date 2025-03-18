@@ -54,7 +54,7 @@ def get_stream(content) -> str:
         delta = chunk.choices[0].delta  # <-- message 字段被替换成了 delta 字段
         if delta.content:
             res += delta.content
-            print(delta.content, end="")
+            common.markdown_stream(delta.content)
 
     return res
 

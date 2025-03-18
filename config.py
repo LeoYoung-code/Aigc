@@ -1,16 +1,16 @@
 from typing import Type, Dict
 from class_interface import ClassInterface
-from ark.dipuDada import DipuDada
-from ark.deepseekModel import DeepSeekArk
-from ark.doubao256kModel import DouBao256kModel
-from google.gemini import Gemini
-from moonShort.moonshot import Moonshot
-from mistral.mistralLarge import Mistral
-from openAI.chatGPT import OpenAI
-from siliconFlow.siliconFlow import SiliconFlow
-from deepseek.deepseek import DeepSeek
-from dashscope.bailian import BaiLian
-from dashscope.qwqPlus import QwqPlus
+from models.ark.dipuDada import DipuDada
+from models.ark.deepseekModel import DeepSeekArk
+from models.ark.doubao256kModel import DouBao256kModel
+from models.google.gemini import Gemini
+from models.moonShort.moonshot import Moonshot
+from models.mistral.mistralLarge import Mistral
+from models.openAI.chatGPT import OpenAI
+from models.siliconFlow.siliconFlow import SiliconFlow
+from models.deepseek.deepseek import DeepSeek
+from models.dashscope.bailian import BaiLian
+from models.dashscope.qwqPlus import QwqPlus
 
 # 定义类映射配置
 class_map_config: Dict[str, Type["ClassInterface"]] = {
