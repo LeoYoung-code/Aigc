@@ -76,20 +76,20 @@ def print_stream(stream):
         buffer_size = 0  # 用于追踪缓冲区大小
         
         for chunk in stream:
-            if not chunk.choices:
+            if not chunk.choices or len(chunk.choices) == 0:
                 continue
-            delta = chunk.choices[0].delta
+            delta = getattr(chunk.choices[0], 'delta', None)
             if not delta:
                 continue
 
             update_needed = False
-            if reason := delta.reasoning_content:
+            if reason := getattr(delta, 'reasoning_content', None):
                 think_text += reason
                 resp_think.append(reason)
                 buffer_size += len(reason)
                 update_needed = True
                 
-            if res := delta.content:
+            if res := getattr(delta, 'content', None):
                 conclusion_text += res
                 resp_conclusion.append(res)
                 buffer_size += len(res)
@@ -140,12 +140,12 @@ def print_think_md(res):
 def print_conclusion_md(res):
     print("\n" * 3, end="")
     markdown_print(res, header="📒结论输出", header_color="yellow", end="\n")
-
+    return res
 
 def get_input(conclusion):
     if conclusion:
         return conclusion + "\n 将上述内容转换成 markdown 格式的脑图文案."
-    print("\n" * 3 + "请输入您的问题👩‍⚕️（空行结束）:")
+    print("请输入您的问题👩‍⚕️（空行结束）:")
     lines = []
     while True:
         line = input()
@@ -186,37 +186,14 @@ def markdown_print(
 
 
 def markdown_stream(chunks):
+    console = Console()
     response = ""
-    buffer = ""
-    update_threshold = 3  # 每积累3个字符更新一次，可以根据需要调整
-    
-    with Live(
-        console=_CONSOLE, 
-        refresh_per_second=4,  # 降低刷新频率
-        vertical_overflow="visible",  # 修改为visible以显示完整内容
-        auto_refresh=False  # 手动控制刷新时机
-    ) as live:
+    with Live(console=console, refresh_per_second=10, vertical_overflow="ellipsis") as live:
         for chunk in chunks:
-            buffer += chunk
             response += chunk
-            
-            # 当缓冲区达到阈值或收到换行符时更新显示
-            if len(buffer) >= update_threshold or '\n' in buffer:
-                md = Markdown(response, code_theme="dracula")
-                live.update(md)
-                live.refresh()
-                buffer = ""  # 清空缓冲区
-                
-        # 确保最后的内容也被显示
-        if buffer:
             md = Markdown(response, code_theme="dracula")
             live.update(md)
-    
-    # 渲染完成后清空控制台
-    _CONSOLE.clear()
-    
     return response
-
 
 def custom_print(
         ptype: PrintType,

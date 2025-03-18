@@ -5,7 +5,7 @@ from class_interface import ClassInterface
 
 # 模型初始化
 genai.configure(api_key=os.getenv('GOOGLE_API_KEY'))
-model = genai.GenerativeModel('gemini-1.5-pro-latest')
+model = genai.GenerativeModel('gemini-2.0-flash-thinking-exp')
 
 
 def get_all_model():
@@ -13,22 +13,16 @@ def get_all_model():
         if 'generateContent' in m.supported_generation_methods:
             print(m.name)
 
-def req(conclusion=None):
-    content = common.get_input(conclusion)
-    response = model.generate_content(content, stream=True)
-    try:
-        text = ""
-        for chunk in response:
-            common.markdown_stream(chunk.text)
-            text += chunk.text
-        return common.print_conclusion_md(text)
-    except Exception as e:
-        print(f'{type(e).__name__}: {e}')
-
 class Gemini(ClassInterface):
     def initialize(self):
         # get_all_model()
-        print("正在使用GEMINI_1_5_PRO_LATEST大模型")
+        print("正在使用gemini_2.0_flash大模型")
 
     def request(self, conclusion=None):
-       return req(conclusion)
+        content = common.get_input(conclusion)
+        if not content:
+            print("\n" * 3 + "输入为空，请重新输入")
+            content = common.get_input(conclusion)
+        response = model.generate_content(content, stream=True)
+        return  common.markdown_stream(response)
+        

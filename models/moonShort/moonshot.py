@@ -38,7 +38,6 @@ def chat(query, history):
     return result
 
 def get_stream(content) -> str:
-    res = ""
     stream = client.chat.completions.create(
         model="moonshot-v1-32k",
         messages=[
@@ -50,23 +49,7 @@ def get_stream(content) -> str:
         temperature=0.3,
         stream=True,  # <-- 注意这里，我们通过设置 stream=True 开启流式输出模式
     )
-    for chunk in stream:
-        delta = chunk.choices[0].delta  # <-- message 字段被替换成了 delta 字段
-        if delta.content:
-            res += delta.content
-            common.markdown_stream(delta.content)
-
-    return res
-
-def req(conclusion=None):
-    content = common.get_input(conclusion)
-    # 多轮对话
-    # common.print_conclusion_md(chat(content, history))
-    # 流式输出
-    r = get_stream(content)
-    common.print_conclusion_md(r)
-    return r
-
+    return common.print_stream(stream)
 
 class Moonshot(ClassInterface):
     def initialize(self):
@@ -74,4 +57,5 @@ class Moonshot(ClassInterface):
         print("正在使用moonshot-v1-32k大模型")
 
     def request(self, conclusion=None):
-       return req(conclusion)
+        content = common.get_input(conclusion)
+        return get_stream(content)
