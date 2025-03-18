@@ -10,10 +10,8 @@ def req(conclusion=None):
     chat_response = client.chat.complete(
         model = "mistral-large-latest", 
         messages=[
-            {
-                "role": "user",
-                "content": content,
-            },
+            {"role": "system", "content": "你是迪普，是人工智能助手,用中文详细的回答每一个问题。"},
+            {"role": "user","content": content},
         ]
     )
     response = chat_response.choices[0].message.content
