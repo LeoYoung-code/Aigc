@@ -62,11 +62,19 @@ def print_parting_line(text = "这是一条分割线"):
 def print_stream(stream):
     resp_think = []
     resp_conclusion = []
-    # _CONSOLE.print(Text("\n╰─❯ 大模型响应:", style="yellow underline bold"))
     print_parting_line("大模型响应")
-    with Live(console=_CONSOLE, refresh_per_second=8, auto_refresh=True, vertical_overflow="visible") as live_content:
+    
+    # 降低刷新频率，使用手动刷新控制
+    with Live(
+        console=_CONSOLE, 
+        refresh_per_second=4,  # 降低刷新频率
+        auto_refresh=False,    # 关闭自动刷新
+        vertical_overflow="visible"
+    ) as live_content:
         think_text = ""
         conclusion_text = ""
+        buffer_size = 0  # 用于追踪缓冲区大小
+        
         for chunk in stream:
             if not chunk.choices:
                 continue
@@ -74,28 +82,53 @@ def print_stream(stream):
             if not delta:
                 continue
 
+            update_needed = False
             if reason := delta.reasoning_content:
-                # 累积内容并更新显示
                 think_text += reason
                 resp_think.append(reason)
-
-                # 使用Markdown渲染累积的内容
-                md = Markdown(think_text, code_theme="dracula")
-                live_content.update(md)
+                buffer_size += len(reason)
+                update_needed = True
+                
             if res := delta.content:
                 conclusion_text += res
                 resp_conclusion.append(res)
-                md = Markdown(conclusion_text, code_theme="dracula")
-                live_content.update(md)
-        # 渲染完成后清空Live内容
-        empty_md = Markdown("")
-        live_content.update(empty_md)
+                buffer_size += len(res)
+                update_needed = True
 
-    if resp_think:
-        print_think_md(''.join(resp_think))
+            # 当累积一定量的内容或遇到换行符时才更新显示
+            if update_needed and (buffer_size >= 5 or '\n' in (reason or res or '')):
+                content = ""
+                if think_text:
+                    content = "╰─❯ 🤔思考内容输出:\n\n" + think_text
+                if conclusion_text:
+                    if content:
+                        content += "\n\n"
+                    content += "╰─❯ 📒结论输出:\n\n" + conclusion_text
+                    
+                md = Markdown(content, code_theme="dracula")
+                live_content.update(md)
+                live_content.refresh()  # 手动触发刷新
+                buffer_size = 0  # 重置缓冲区
+                
+        # 确保最后的内容被完整显示
+        if think_text or conclusion_text:
+            content = ""
+            if think_text:
+                content = "╰─❯ 🤔思考内容输出:\n\n" + think_text
+            if conclusion_text:
+                if content:
+                    content += "\n\n"
+                content += "╰─❯ 📒结论输出:\n\n" + conclusion_text
+            md = Markdown(content, code_theme="dracula")
+            live_content.update(md)
+            live_content.refresh()
+
+    # 清空Live内容
+    empty_md = Markdown("")
+    live_content.update(empty_md)
+
     if resp_conclusion:
         r = ''.join(resp_conclusion)
-        print_conclusion_md(r)
         return r
 
 
