@@ -19,19 +19,11 @@ def get_stream(content):
         stream=True
     )
 
-
-def req(conclusion=None):
-    try:
-        content = common.get_input(conclusion)
-        stream = get_stream(content)
-        return common.print_stream(stream)
-    except Exception as e:
-        print(f'{type(e).__name__}: {e}')
-
-
 class SiliconFlow(ClassInterface):
     def initialize(self):
         print("正在使用SILICON_FLOW大模型")
 
     def request(self, conclusion=None):
-       return req(conclusion)
+        content = common.get_input(conclusion)
+        stream = get_stream(content)
+        return common.print_stream(stream)

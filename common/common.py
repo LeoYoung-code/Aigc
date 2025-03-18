@@ -1,7 +1,9 @@
 from rich.console import Console
-from rich.live import Live
 from rich.markdown import Markdown
 from rich.text import Text
+from rich.live import Live
+from rich.console import Group
+from rich.panel import Panel
 from class_interface import ClassInterface
 from abc import ABC, abstractmethod
 from typing import Type, Dict, Literal, Optional
@@ -59,78 +61,6 @@ def print_parting_line(text = "这是一条分割线"):
     _CONSOLE.print(Text(output_text, style="yellow  bold"))
 
 
-def print_stream(stream):
-    resp_think = []
-    resp_conclusion = []
-    print_parting_line("大模型响应")
-    
-    # 降低刷新频率，使用手动刷新控制
-    with Live(
-        console=_CONSOLE, 
-        refresh_per_second=4,  # 降低刷新频率
-        auto_refresh=False,    # 关闭自动刷新
-        vertical_overflow="visible"
-    ) as live_content:
-        think_text = ""
-        conclusion_text = ""
-        buffer_size = 0  # 用于追踪缓冲区大小
-        
-        for chunk in stream:
-            if not chunk.choices:
-                continue
-            delta = chunk.choices[0].delta
-            if not delta:
-                continue
-
-            update_needed = False
-            if reason := delta.reasoning_content:
-                think_text += reason
-                resp_think.append(reason)
-                buffer_size += len(reason)
-                update_needed = True
-                
-            if res := delta.content:
-                conclusion_text += res
-                resp_conclusion.append(res)
-                buffer_size += len(res)
-                update_needed = True
-
-            # 当累积一定量的内容或遇到换行符时才更新显示
-            if update_needed and (buffer_size >= 5 or '\n' in (reason or res or '')):
-                content = ""
-                if think_text:
-                    content = "╰─❯ 🤔思考内容输出:\n\n" + think_text
-                if conclusion_text:
-                    if content:
-                        content += "\n\n"
-                    content += "╰─❯ 📒结论输出:\n\n" + conclusion_text
-                    
-                md = Markdown(content, code_theme="dracula")
-                live_content.update(md)
-                live_content.refresh()  # 手动触发刷新
-                buffer_size = 0  # 重置缓冲区
-                
-        # 确保最后的内容被完整显示
-        if think_text or conclusion_text:
-            content = ""
-            if think_text:
-                content = "╰─❯ 🤔思考内容输出:\n\n" + think_text
-            if conclusion_text:
-                if content:
-                    content += "\n\n"
-                content += "╰─❯ 📒结论输出:\n\n" + conclusion_text
-            md = Markdown(content, code_theme="dracula")
-            live_content.update(md)
-            live_content.refresh()
-
-    # 清空Live内容
-    empty_md = Markdown("")
-    live_content.update(empty_md)
-
-    if resp_conclusion:
-        r = ''.join(resp_conclusion)
-        return r
-
 
 
 def print_think_md(res):
@@ -140,12 +70,12 @@ def print_think_md(res):
 def print_conclusion_md(res):
     print("\n" * 3, end="")
     markdown_print(res, header="📒结论输出", header_color="yellow", end="\n")
-
+    return res
 
 def get_input(conclusion):
     if conclusion:
         return conclusion + "\n 将上述内容转换成 markdown 格式的脑图文案."
-    print("\n" * 3 + "请输入您的问题👩‍⚕️（空行结束）:")
+    print("请输入您的问题👩‍⚕️（空行结束）:")
     lines = []
     while True:
         line = input()
@@ -186,37 +116,15 @@ def markdown_print(
 
 
 def markdown_stream(chunks):
+    console = Console()
     response = ""
-    buffer = ""
-    update_threshold = 3  # 每积累3个字符更新一次，可以根据需要调整
-    
-    with Live(
-        console=_CONSOLE, 
-        refresh_per_second=4,  # 降低刷新频率
-        vertical_overflow="visible",  # 修改为visible以显示完整内容
-        auto_refresh=False  # 手动控制刷新时机
-    ) as live:
+    print_parting_line("🤔 结论内容输出")
+    with Live(console=console, refresh_per_second=10, vertical_overflow="ellipsis") as live:
         for chunk in chunks:
-            buffer += chunk
-            response += chunk
-            
-            # 当缓冲区达到阈值或收到换行符时更新显示
-            if len(buffer) >= update_threshold or '\n' in buffer:
-                md = Markdown(response, code_theme="dracula")
-                live.update(md)
-                live.refresh()
-                buffer = ""  # 清空缓冲区
-                
-        # 确保最后的内容也被显示
-        if buffer:
+            response += chunk.text
             md = Markdown(response, code_theme="dracula")
             live.update(md)
-    
-    # 渲染完成后清空控制台
-    _CONSOLE.clear()
-    
     return response
-
 
 def custom_print(
         ptype: PrintType,
@@ -261,3 +169,79 @@ def custom_print(
             exit(1)
 
     return formatted_text if not print_now else None
+
+
+def print_stream(stream):
+    """
+    该函数实时接收流式响应内容，将思考内容和结论输出分区显示，
+    并且只有在思考内容全部输出完成后，才显示结论输出面板。
+    通过 Group 和 Panel 组合实现清晰布局，使用 Live 组件自动刷新界面。
+    """
+    # 初始化两个区域的内容
+    think_text = ""
+    conclusion_text = ""
+    # 跟踪是否思考已完成
+    thinking_complete = False
+    # 跟踪是否已收到任何结论内容
+    has_conclusion = False
+    # 存储最后一个chunk，用于检测思考内容是否已结束
+    last_chunk_has_reasoning = False
+    
+    def render_content():
+        """
+        定义一个渲染函数，根据当前状态决定显示哪些面板
+        """
+        panels = []
+        
+        # 始终显示思考面板
+        md_think = Markdown("**╰─❯ 🤔 思考内容输出:**\n\n" + think_text, code_theme="dracula")
+        panel_think = Panel(md_think, title="思考内容", border_style="blue")
+        panels.append(panel_think)
+        
+        # 只有当思考完成且有结论内容时才显示结论面板
+        if thinking_complete and has_conclusion:
+            md_conclusion = Markdown("**╰─❯ 📒 结论输出:**\n\n" + conclusion_text, code_theme="dracula")
+            panel_conclusion = Panel(md_conclusion, title="结论", border_style="green")
+            panels.append(panel_conclusion)
+            
+        # 用 Group 组合面板
+        return Group(*panels)
+
+    # 使用 Live 开启实时更新
+    with Live(render_content(), refresh_per_second=4, auto_refresh=True) as live:
+        # 遍历流式响应的每个 chunk
+        for chunk in stream:
+            # 若 chunk 无效则跳过
+            if not chunk.choices or len(chunk.choices) == 0:
+                continue
+                
+            delta = getattr(chunk.choices[0], 'delta', None)
+            if not delta:
+                continue
+                
+            # 检查当前chunk中是否有思考内容
+            current_has_reasoning = hasattr(delta, 'reasoning_content') and getattr(delta, 'reasoning_content') is not None
+            
+            # 累加思考内容（如果有）
+            if reason := getattr(delta, 'reasoning_content', None):
+                think_text += reason
+                last_chunk_has_reasoning = True
+            else:
+                # 如果上一个chunk有思考内容，但当前chunk没有，说明思考内容已结束
+                if last_chunk_has_reasoning and not current_has_reasoning:
+                    thinking_complete = True
+                last_chunk_has_reasoning = False
+            
+            # 累加结论输出（如果有）
+            if res := getattr(delta, 'content', None):
+                conclusion_text += res
+                has_conclusion = True
+                
+                # 一旦出现结论内容，我们也可以认为思考已经结束
+                thinking_complete = True
+            
+            # 每次有新内容则刷新展示
+            live.update(render_content())
+            
+    # 流结束后返回完整的结论文本
+    return conclusion_text
