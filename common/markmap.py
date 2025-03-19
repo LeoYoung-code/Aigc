@@ -3,6 +3,18 @@ import time
 import subprocess
 import shutil
 
+def get_project_root():
+    """
+    获取项目根目录的绝对路径
+    
+    Returns:
+        str: 项目根目录的绝对路径
+    """
+    # 获取当前文件的目录
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    # 返回项目根目录（当前文件的父目录的父目录）
+    return os.path.dirname(os.path.dirname(current_dir))
+
 def save_markdown_to_file(markdown_text, prefix="模型总结"):
     """
     将markdown文本保存到指定路径的文件中
@@ -14,8 +26,11 @@ def save_markdown_to_file(markdown_text, prefix="模型总结"):
     Returns:
         str: 创建的文件路径
     """
+    # 获取项目根目录
+    project_root = get_project_root()
+    
     # 确保目标目录存在
-    target_dir = "resource/md_cache"
+    target_dir = os.path.join(project_root,"AIGC", "resource", "md_cache")
     if not os.path.exists(target_dir):
         os.makedirs(target_dir)
     
