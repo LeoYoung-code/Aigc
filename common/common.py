@@ -208,7 +208,7 @@ def print_stream(stream):
         return Group(*panels)
 
     # 使用 Live 开启实时更新
-    with Live(render_content(), refresh_per_second=4, auto_refresh=True) as live:
+    with Live(render_content(), refresh_per_second=4,auto_refresh=False, vertical_overflow="crop_above") as live:
         # 遍历流式响应的每个 chunk
         for chunk in stream:
             # 若 chunk 无效则跳过
@@ -241,7 +241,7 @@ def print_stream(stream):
                 thinking_complete = True
             
             # 每次有新内容则刷新展示
-            live.update(render_content())
+            live.update(render_content(), refresh=True)
             
     # 流结束后返回完整的结论文本
     return conclusion_text
