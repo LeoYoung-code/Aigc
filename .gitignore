@@ -3,4 +3,3 @@
 *.idea/
 *.pyc
 /resource/md_cache/
-/mcp_servers/mcp_tcp_server.log
