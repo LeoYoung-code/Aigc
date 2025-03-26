@@ -1,6 +1,5 @@
 from typing import Type, Dict, Any
 import os
-from class_interface import ClassInterface
 
 # OpenAI 协议模型配置
 openai_models_config = {
@@ -86,38 +85,6 @@ openai_models_config = {
         "system_message": "你是迪普，是人工智能助手,用中文详细的回答每一个问题。",
         "stream": True
     }
-}
-
-# 在这里导入，避免循环导入
-from models.openai_models import (
-    ArkDipu, 
-    ArkDeepSeek, 
-    ArkDouBao,
-    DeepSeekV3,
-    DeepSeekReasoner,
-    Moonshot,
-    SiliconFlow,
-    BaiLian,
-    QwqPlus,
-    GPT4oMini
-)
-from models.google.gemini import Gemini
-from models.mistral.mistralLarge import Mistral
-
-# 定义类映射配置
-class_map_config: Dict[str, Type["ClassInterface"]] = {
-    # "a": ArkDipu,  # 迪普达达模型
-    # "b": BaiLian,
-    # "c": ArkDouBao,  # 豆包256k模型
-    # "d": ArkDeepSeek,  # 深度求索Ark模型
-    # "e": Moonshot,
-    # "f": Mistral,
-    # "j": GPT4oMini,
-    # "h": SiliconFlow,
-    # "g": Gemini,
-    # "i": DeepSeekReasoner,
-    # "k": QwqPlus,
-    # "l": DeepSeekV3,
 }
 
 # 默认使用的脑图生成模型
