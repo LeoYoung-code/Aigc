@@ -72,5 +72,19 @@ openai_models_config = {
         "api_key_env": "SILICON_FLOW_API_KEY",
         "system_message": "你是迪普，是人工智能助手,用中文详细的回答每一个问题。",
         "stream": True
+    },
+    
+    # 阿里云百炼 系列
+    "qwq-plus": {
+        "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        "api_key_env": "DASHSCOPE_API_KEY",
+        "system_message": "你是迪普，是人工智能助手,用中文详细的回答每一个问题。",
+        "stream": True
+    },
+    "deepseek-r1": {
+        "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        "api_key_env": "DASHSCOPE_API_KEY",
+        "system_message": "你是迪普，是人工智能助手,用中文详细的回答每一个问题。",
+        "stream": True
     }
 }

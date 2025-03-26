@@ -7,5 +7,4 @@ class Moonshot(ClassInterface):
         print("正在使用moonshot-v1-32k大模型")
 
     def request(self, conclusion=None):
-        content = common.get_input(conclusion)
-        return common.call_openai_model("moonshot-v1-32k", content)
+        return common.call_openai_model("moonshot-v1-32k", common.get_input(conclusion))

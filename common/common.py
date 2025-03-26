@@ -48,45 +48,45 @@ def call_openai_model(model_name: str, content: str, temperature: float = None):
     返回:
         模型的响应结果
     """
-    # 获取模型配置
-    if model_name not in config.openai_models_config:
-        raise ValueError(f"未知的模型: {model_name}，请在 config.py 中的 openai_models_config 添加配置")
-    
-    model_config = config.openai_models_config[model_name]
-    
-    # 创建 OpenAI 客户端
-    client_args = {}
-    if model_config["base_url"]:
-        client_args["base_url"] = model_config["base_url"]
-    
-    # 获取 API 密钥
-    api_key = os.getenv(model_config["api_key_env"])
-    if not api_key:
-        raise ValueError(f"环境变量 {model_config['api_key_env']} 未设置，无法调用模型")
-    
-    client_args["api_key"] = api_key
-    client = OpenAI(**client_args)
-    
-    # 准备请求参数
-    request_args = {
-        "model": model_name,
-        "messages": [
-            {"role": "system", "content": model_config["system_message"]},
-            {"role": "user", "content": content}
-        ]
-    }
-    
-    # 添加其他可选参数
-    if "stream" in model_config:
-        request_args["stream"] = model_config["stream"]
-    
-    if temperature is not None:
-        request_args["temperature"] = temperature
-    elif "temperature" in model_config:
-        request_args["temperature"] = model_config["temperature"]
-    
-    # 调用模型
     try:
+        # 获取模型配置
+        if model_name not in config.openai_models_config:
+            raise ValueError(f"未知的模型: {model_name}，请在 config.py 中的 openai_models_config 添加配置")
+        
+        model_config = config.openai_models_config[model_name]
+        
+        # 创建 OpenAI 客户端
+        client_args = {}
+        if model_config["base_url"]:
+            client_args["base_url"] = model_config["base_url"]
+        
+        # 获取 API 密钥
+        api_key = os.getenv(model_config["api_key_env"])
+        if not api_key:
+            raise ValueError(f"环境变量 {model_config['api_key_env']} 未设置，无法调用模型")
+        
+        client_args["api_key"] = api_key
+        client = OpenAI(**client_args)
+        
+        # 准备请求参数
+        request_args = {
+            "model": model_name,
+            "messages": [
+                {"role": "system", "content": model_config["system_message"]},
+                {"role": "user", "content": content}
+            ]
+        }
+        
+        # 添加其他可选参数
+        if "stream" in model_config:
+            request_args["stream"] = model_config["stream"]
+        
+        if temperature is not None:
+            request_args["temperature"] = temperature
+        elif "temperature" in model_config:
+            request_args["temperature"] = model_config["temperature"]
+        
+        # 调用模型
         response = client.chat.completions.create(**request_args)
         if request_args.get("stream", False):
             return print_stream(response)
@@ -94,8 +94,9 @@ def call_openai_model(model_name: str, content: str, temperature: float = None):
             content = response.choices[0].message.content
             return print_conclusion_md(content)
     except Exception as e:
-        print(f"模型调用失败: {type(e).__name__}: {e}")
-        return None
+        error_message = f"模型调用失败: {type(e).__name__}: {e}"
+        print(error_message)
+        return print_conclusion_md(f"模型 {model_name} 调用出错: {str(e)}\n\n请检查以下可能的问题：\n1. API密钥是否正确设置\n2. 网络连接是否正常\n3. 模型服务是否可用")
 
 
 def markdown_chunk(chunk):

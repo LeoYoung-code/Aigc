@@ -7,5 +7,4 @@ class SiliconFlow(ClassInterface):
         print("正在使用SILICON_FLOW大模型")
 
     def request(self, conclusion=None):
-        content = common.get_input(conclusion)
-        return common.call_openai_model("deepseek-ai/DeepSeek-V2.5", content)
+        return common.call_openai_model("deepseek-ai/DeepSeek-V2.5", common.get_input(conclusion))
