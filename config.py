@@ -1,31 +1,33 @@
 from typing import Type, Dict, Any
 import os
 from class_interface import ClassInterface
-from models.ark.dipuDada import DipuDada
-from models.ark.deepseekModel import DeepSeekArk
-from models.ark.doubao256kModel import DouBao256kModel
-from models.deepseek.deepseek_code import DeepSeekV3
+from models.openai_models import (
+    ArkDipu, 
+    ArkDeepSeek, 
+    ArkDouBao,
+    DeepSeekV3,
+    DeepSeekReasoner,
+    Moonshot,
+    SiliconFlow,
+    BaiLian,
+    QwqPlus,
+    GPT4oMini
+)
 from models.google.gemini import Gemini
-from models.moonShort.moonshot import Moonshot
 from models.mistral.mistralLarge import Mistral
-from models.openAI.chatGPT import OpenAI
-from models.siliconFlow.siliconFlow import SiliconFlow
-from models.deepseek.deepseek_think import DeepSeek
-from models.dashscope.bailian import BaiLian
-from models.dashscope.qwqPlus import QwqPlus
 
 # 定义类映射配置
 class_map_config: Dict[str, Type["ClassInterface"]] = {
-    "a": DipuDada,
+    "a": ArkDipu,  # 迪普达达模型
     "b": BaiLian,
-    "c": DouBao256kModel,
-    "d": DeepSeekArk,
+    "c": ArkDouBao,  # 豆包256k模型
+    "d": ArkDeepSeek,  # 深度求索Ark模型
     "e": Moonshot,
     "f": Mistral,
-    "j": OpenAI,
+    "j": GPT4oMini,
     "h": SiliconFlow,
     "g": Gemini,
-    "i": DeepSeek,
+    "i": DeepSeekReasoner,
     "k": QwqPlus,
     "l": DeepSeekV3,
 }
@@ -126,7 +128,7 @@ openai_models_config = {
     
     # Ark 系列
     "ark-dipu": {
-        "base_url": "https://ark.cn-beijing.volces.com/api/v3",
+        "base_url": "https://ark.cn-beijing.volces.com/api/v3/bots",
         "api_key_env": "ARK_API_KEY",
         "system_message": "你是迪普，是人工智能助手,用中文详细的回答每一个问题。",
         "stream": True

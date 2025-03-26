@@ -116,3 +116,51 @@ class QwqPlus(OpenAICompatibleModel):
 class BaiLian(OpenAICompatibleModel):
     """阿里云百炼DeepSeek模型"""
     pass 
+
+
+@register_model(
+    key="a", 
+    display_name="迪普达达模型",
+    openai_config={
+        "model_id": "bot-20250217100631-l4csl",
+        "base_url": "https://ark.cn-beijing.volces.com/api/v3/bots",
+        "api_key_env": "ARK_API_KEY",
+        "system_message": "你是迪普，是人工智能助手,用中文详细的回答每一个问题。",
+        "stream": True
+    }
+)
+class ArkDipu(OpenAICompatibleModel):
+    """Ark-Dipu模型"""
+    pass
+
+
+@register_model(
+    key="d", 
+    display_name="深度求索Ark模型",
+    openai_config={
+        "model_id": "ep-20250208175039-r6lmf",
+        "base_url": "https://ark.cn-beijing.volces.com/api/v3",
+        "api_key_env": "ARK_API_KEY",
+        "system_message": "你是迪普，是人工智能助手,用中文详细的回答每一个问题。",
+        "stream": True
+    }
+)
+class ArkDeepSeek(OpenAICompatibleModel):
+    """Ark-DeepSeek模型"""
+    pass
+
+
+@register_model(
+    key="c", 
+    display_name="豆包256k模型",
+    openai_config={
+        "model_id": "doubao-1-5-pro-256k-250115",
+        "base_url": "https://ark.cn-beijing.volces.com/api/v3",
+        "api_key_env": "ARK_API_KEY",
+        "system_message": "你是迪普，是人工智能助手,用中文详细的回答每一个问题。",
+        "stream": True
+    }
+)
+class ArkDouBao(OpenAICompatibleModel):
+    """Ark-DouBao模型"""
+    pass 
