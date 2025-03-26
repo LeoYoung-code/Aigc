@@ -10,3 +10,5 @@ google-generativeai>=0.3.0
 mistralai>=0.0.10
 volcengine-python-sdk[ark]>=1.0.0
 cozepy>=0.0.10
+
+protobuf~=4.25.1
