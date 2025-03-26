@@ -1,8 +1,13 @@
 # 核心依赖
-# rich>=13.9.4 # 弃用，存在bug 待官方合并PR
-git+https://github.com/cpsievert/rich.git@vertical_overflow-crop-above#egg=rich
+rich>=13.9.4
 sympy>=1.12.0
 httpx~=0.27.0
+
+# 异步支持
+asyncio>=3.4.3
+
+# 命令行支持
+argparse>=1.4.0
 
 # 各AI模型SDK
 openai>=1.0.0
@@ -11,4 +16,6 @@ mistralai>=0.0.10
 volcengine-python-sdk[ark]>=1.0.0
 cozepy>=0.0.10
 
+# 其他依赖
 protobuf~=4.25.1
+colorama>=0.4.6

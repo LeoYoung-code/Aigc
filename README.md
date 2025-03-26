@@ -1,135 +1,158 @@
-# AIGC 在终端内优雅的调用各种大模型
-## 主要功能介绍
-* 支持多种大语言模型，如：openai, mistral, volcengine, deepseek, ark, moonshot, siliconflow, ...
-* 支持多种大模型总结为脑图功能
-* 简单添加新模型，支持自定义模型调用
+# 智能对话助手
 
-## 主要文件和模块说明
-- main.py：项目的入口文件，负责解析命令行参数，根据用户选择的模型初始化相应的模型实例，并调用模型进行请求。
-- param.py：用于解析命令行参数，处理用户输入的模型名称和是否生成脑图的选项，并进行参数验证。
-- config.py：配置文件，包含模型映射配置和自定义脑图生成模型的配置。
-- common/：公共模块，包含一些通用的工具函数，如获取用户输入、打印流式响应、保存 Markdown 文件和生成脑图等。
-- dashscope/、deepseek/、openAI/ 等：不同模型的实现模块，每个模块包含具体模型的请求逻辑和初始化方法。
-- tests/：测试模块，包含对 Markdown 文件保存和脑图生成功能的单元测试。
+一个支持多种大语言模型的命令行交互界面，提供丰富的功能和美观的界面。
 
+## 主要特性
 
-## 使用方式
-### 1. 模型选择指南
+- 🌈 **多模型支持**：整合多种大语言模型，一个界面调用所有
+- 🚀 **统一接口**：所有模型共享一致的调用方式
+- 💫 **自动注册**：通过装饰器自动注册模型
+- 📊 **思维导图**：支持将模型输出转换为思维导图
+- 🔄 **异步支持**：提供同步和异步两种调用方式
+- 🎨 **精美界面**：基于Rich库实现精美的终端界面
+- 🏷️ **历史记录**：支持聊天历史记录管理
 
-```shell
-    python main.py  -h
-```
-![img.png](resource/img/help.png)
+## 安装
 
-
-#### demo
-```shell
-    python main.py b
-```
-![img.png](resource/img/use.png)
-
-
-#### 效果
-![img.png](resource/img/demo.png)
-
-### 2. 总结为脑图功能
-    加入 -m 参数，即可自动总结为脑图功能
-
-#### demo
-```shell
-    python main.py b -m
-```
-#### 效果
-提问
-![img.png](resource/img/mind_qa.png)
-自动在浏览器打开脑图
-![img.png](resource/img/mind.png)
-
-
-## 快速开始 安装依赖
-
-### 使用requirements.txt安装依赖（推荐）
-1. 安装 uv（一个快速的 Python 包管理器）：
-```bash
-    curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-
-2. 克隆仓库：
+1. 克隆项目：
 
 ```bash
-    git clone https://github.com/LeoYoung-code/Aigc.git
-    cd Aigc
+git clone https://github.com/yourusername/ai-assistant.git
+cd ai-assistant
 ```
 
-3. 创建并激活虚拟环境：
+2. 安装依赖：
 
 ```bash
-    uv venv
-    source .venv/bin/activate  # Unix/macOS 系统
-    # Windows 系统使用：
-    # .venv\Scripts\activate
+pip install -r requirements.txt
 ```
 
-4. 安装依赖：
+3. 安装思维导图生成工具（可选）：
 
 ```bash
-    uv pip install -r requirements.txt
+npm install -g markmap-cli
 ```
 
-### 手动安装依赖SDK（按需安装）
-```shell
-    python -m pip  install --upgrade "volcengine-python-sdk[ark]"  # 火山
-    python -m pip  install -q -U google-generativeai               # 谷歌  
-    python -m pip  install --upgrade 'openai>=1.0'                 # openai
-    python -m pip  install --upgrade "mistralai"                   # mistral
-    # 验证SDK 依赖包
-    # python -c 'import openai; print("version =",openai.__version__)'
-    
+## 环境变量配置
+
+根据你想使用的模型，设置相应的API密钥环境变量：
+
+- OpenAI: `OPENAI_API_KEY`
+- DeepSeek: `DEEP_SEEK_API_KEY`
+- Moonshot: `MOONSHOT_API_KEY`
+- 阿里云百炼: `DASHSCOPE_API_KEY`
+- SiliconFlow: `SILICON_FLOW_API_KEY`
+
+## 使用方法
+
+### 基本用法
+
+```bash
+python main.py <模型代号>
 ```
 
-### 总结脑图生成 (可选，需要总结为脑图功能安装)
-```shell
-    brew install node
-    node -v
-    npm -v
+例如：
+
+```bash
+python main.py demo  # 使用演示模型
+python main.py j     # 使用GPT-4o Mini
 ```
 
-## 配置本地环境变量
-### mac Or Linux
-```shell
-    export DASHSCOPE_API_KEY="your_api_key_here"    # 阿里百炼
-    export DEEP_SEEK_API_KEY="your_api_key_here"    # deepseek
-    export GOOGLE_API_KEY="your_api_key_here"       # 谷歌
-    export MISTRAL_API_KEY="your_api_key_here"      # Mistral
-    export OPENAI_API_KEY="your_api_key_here"       # openai
-    export ARK_API_KEY="your_api_key_here"          # 火山
-    export MOONSHOT_API_KEY="your_api_key_here"     # 月背
-    export SILICON_FLOW_API_KEY="your_api_key_here" # SiliconFlow
+### 生成思维导图
+
+```bash
+python main.py <模型代号> -m
 ```
 
-## 自定义脑图生成模型
+### 使用异步模式
+
+```bash
+python main.py <模型代号> -a
+```
+
+### 查看帮助信息
+
+```bash
+python main.py -h
+```
+
+## 支持的模型
+
+- `demo`: 演示模型 (无需API密钥)
+- `b`: 阿里云百炼DeepSeek大模型
+- `e`: Moonshot-V1-32k大模型
+- `h`: SiliconFlow大模型
+- `i`: DeepSeek官方大模型
+- `j`: GPT-4o Mini大模型
+- `k`: 阿里云百炼QwqPlus(128K)大模型
+- `l`: DeepSeek-V3官方大模型
+
+## 添加新模型
+
+要添加新模型，只需创建一个新的模型类并使用`@register_model`装饰器注册：
+
 ```python
-# 调整 config.py 中的配置 , 默认是豆包 , 你必须配置有效的模型, 推荐配置免费如gemini 或较为便宜的模型
-MODEL_GENERATE_MIND = "c" 
+from core.model import BaseModel
+from core.registry import register_model
+
+@register_model(
+    key="x",  # 模型标识符
+    display_name="新模型",  # 显示名称
+    # 其他配置
+)
+class NewModel(BaseModel):
+    def _initialize(self) -> None:
+        # 初始化代码
+        pass
+        
+    def _request_implementation(self, content: str, **kwargs) -> str:
+        # 请求实现
+        return "响应内容"
 ```
 
-## 新增模型
-项目使用工厂模式 , 你只需要添加一个模型类和修改 config.py 中的配置即可
+对于支持OpenAI API协议的模型，可以继承`OpenAICompatibleModel`：
+
 ```python
-    # 定义类映射配置
-        class_map_config: Dict[str, Type["ClassInterface"]] = {
-            "a": DipuDada,
-            "b": BaiLian,
-            "c": DouBao256kModel,
-            "d": DeepSeekArk,
-            "e": Moonshot,
-            "f": Mistral,
-            "j": OpenAI,
-            "h": SiliconFlow,
-            "g": Gemini,
-            "i": DeepSeek,
-            "k": QwqPlus,
-        }
+from core.openai_model import OpenAICompatibleModel
+from core.registry import register_model
+
+@register_model(
+    key="y",
+    display_name="OpenAI兼容模型",
+    openai_config={
+        "model_id": "model-id",
+        "base_url": "https://api.example.com",
+        "api_key_env": "API_KEY_ENV_NAME",
+        "system_message": "系统提示信息",
+        "stream": True
+    }
+)
+class OpenAICompatibleModelExample(OpenAICompatibleModel):
+    pass  # 不需要额外代码，基类已提供所有实现
 ```
 
-## 根据上述 demo 开始愉快玩耍吧😄
+## 项目结构
+
+```
+.
+├── core/              # 核心功能模块
+│   ├── args.py        # 命令行参数解析
+│   ├── model.py       # 模型基类和接口
+│   ├── openai_model.py # OpenAI兼容模型基类
+│   ├── registry.py    # 模型注册中心
+│   └── utils.py       # 核心工具函数
+├── models/            # 模型实现
+│   ├── demo_model.py  # 演示模型
+│   └── openai_models.py # OpenAI系列模型
+├── ui/                # 用户界面
+│   └── console.py     # 控制台UI
+├── utils/             # 工具模块
+│   └── markmap.py     # 思维导图生成
+├── config.py          # 配置文件
+├── main.py            # 程序入口
+└── requirements.txt   # 依赖文件
+```
+
+## 许可证
+
+本项目采用 MIT 许可证。

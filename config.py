@@ -1,4 +1,4 @@
-from typing import Type, Dict
+from typing import Type, Dict, Any
 from class_interface import ClassInterface
 from models.ark.dipuDada import DipuDada
 from models.ark.deepseekModel import DeepSeekArk
@@ -29,9 +29,44 @@ class_map_config: Dict[str, Type["ClassInterface"]] = {
     "l": DeepSeekV3,
 }
 
+# 默认使用的脑图生成模型
+MODEL_GENERATE_MIND = "e"  # Moonshot
 
-# 定义脑图生成模型
-MODEL_GENERATE_MIND = "c"
+# 终端颜色配置
+COLORS = {
+    "primary": "cyan",
+    "secondary": "blue",
+    "success": "green",
+    "warning": "yellow",
+    "error": "red",
+    "info": "white"
+}
+
+# UI配置
+UI_CONFIG = {
+    "theme": "dark",  # 主题: dark, light
+    "code_theme": "dracula",  # 代码主题: dracula, monokai, github等
+    "compact_mode": False,  # 紧凑模式
+    "refresh_rate": 4,  # 刷新率
+}
+
+# 应用信息
+APP_INFO = {
+    "name": "智能对话助手",
+    "version": "1.0.0",
+    "description": "智能对话助手 - 支持多种大语言模型",
+    "author": "AI开发团队"
+}
+
+# 高级设置
+ADVANCED_SETTINGS = {
+    "cache_enabled": True,  # 启用缓存
+    "cache_dir": "cache",  # 缓存目录
+    "max_history": 20,  # 最大历史记录数
+    "timeout": 60,  # 请求超时时间（秒）
+    "retry_count": 3,  # 重试次数
+    "auto_open_mindmap": True,  # 自动打开思维导图
+}
 
 # OpenAI 协议模型配置
 openai_models_config = {
