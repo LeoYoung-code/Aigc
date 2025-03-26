@@ -115,14 +115,17 @@ def markdown_print(
 
 
 def markdown_stream(chunks):
-    console = Console()
     response = ""
-    print_parting_line("🤔 结论内容输出")
-    with Live(console=console, refresh_per_second=10, vertical_overflow="ellipsis") as live:
+    def render_content():
+        """渲染内容，使用与 print_stream 类似的面板样式"""
+        md = Markdown("**╰─❯ 📒 结论输出:**\n\n" + response, code_theme="dracula")
+        panel = Panel(md, title="结论", border_style="blue")
+        return panel 
+    with Live(render_content(), refresh_per_second=4, auto_refresh=False, vertical_overflow="crop_above") as live:
         for chunk in chunks:
-            response += chunk.text
-            md = Markdown(response, code_theme="dracula")
-            live.update(md)
+            if hasattr(chunk, 'text'):
+                response += chunk.text
+                live.update(render_content(), refresh=True)
     return response
 
 
