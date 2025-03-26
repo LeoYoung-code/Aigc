@@ -1,4 +1,5 @@
 from typing import Type, Dict, Any
+import os
 from class_interface import ClassInterface
 from models.ark.dipuDada import DipuDada
 from models.ark.deepseekModel import DeepSeekArk
@@ -119,6 +120,26 @@ openai_models_config = {
     "deepseek-r1": {
         "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
         "api_key_env": "DASHSCOPE_API_KEY",
+        "system_message": "你是迪普，是人工智能助手,用中文详细的回答每一个问题。",
+        "stream": True
+    },
+    
+    # Ark 系列
+    "ark-dipu": {
+        "base_url": "https://ark.cn-beijing.volces.com/api/v3",
+        "api_key_env": "ARK_API_KEY",
+        "system_message": "你是迪普，是人工智能助手,用中文详细的回答每一个问题。",
+        "stream": True
+    },
+    "ark-deepseek": {
+        "base_url": "https://ark.cn-beijing.volces.com/api/v3",
+        "api_key_env": "ARK_API_KEY",
+        "system_message": "你是迪普，是人工智能助手,用中文详细的回答每一个问题。",
+        "stream": True
+    },
+    "ark-doubao": {
+        "base_url": "https://ark.cn-beijing.volces.com/api/v3",
+        "api_key_env": "ARK_API_KEY",
         "system_message": "你是迪普，是人工智能助手,用中文详细的回答每一个问题。",
         "stream": True
     }
