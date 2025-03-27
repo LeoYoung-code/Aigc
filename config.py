@@ -5,6 +5,8 @@ import os
 openai_models_config = {
     # DeepSeek 系列
     "deepseek-chat": {
+        "key": "l",
+        "display_name": "DeepSeek-V3官方大模型",
         "model_id": "deepseek-chat",
         "base_url": "https://api.deepseek.com",
         "api_key_env": "DEEP_SEEK_API_KEY",
@@ -12,6 +14,8 @@ openai_models_config = {
         "stream": True
     },
     "deepseek-reasoner": {
+        "key": "i",
+        "display_name": "DeepSeek官方大模型",
         "model_id": "deepseek-reasoner",
         "base_url": "https://api.deepseek.com",
         "api_key_env": "DEEP_SEEK_API_KEY",
@@ -21,6 +25,8 @@ openai_models_config = {
     
     # Moonshot 系列
     "moonshot-v1-32k": {
+        "key": "e",
+        "display_name": "Moonshot-V1-32k大模型",
         "model_id": "moonshot-v1-32k",
         "base_url": "https://api.moonshot.cn/v1",
         "api_key_env": "MOONSHOT_API_KEY",
@@ -31,6 +37,8 @@ openai_models_config = {
     
     # OpenAI 系列
     "gpt-4o-mini": {
+        "key": "j",
+        "display_name": "GPT-4o Mini大模型",
         "model_id": "gpt-4o-mini",
         "base_url": "",  # 使用默认 OpenAI 地址
         "api_key_env": "OPENAI_API_KEY",
@@ -40,6 +48,8 @@ openai_models_config = {
     
     # SiliconFlow 系列
     "deepseek-ai/DeepSeek-V2.5": {
+        "key": "h",
+        "display_name": "SiliconFlow大模型",
         "model_id": "deepseek-ai/DeepSeek-V2.5",
         "base_url": "https://api.siliconflow.cn/v1",
         "api_key_env": "SILICON_FLOW_API_KEY",
@@ -49,6 +59,8 @@ openai_models_config = {
     
     # 阿里云百炼 系列
     "qwq-plus": {
+        "key": "k",
+        "display_name": "阿里云百炼QwqPlus(128K)大模型",
         "model_id": "qwq-plus",
         "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
         "api_key_env": "DASHSCOPE_API_KEY",
@@ -56,6 +68,8 @@ openai_models_config = {
         "stream": True
     },
     "deepseek-r1": {
+        "key": "b",
+        "display_name": "阿里云百炼DeepSeek大模型",
         "model_id": "deepseek-r1",
         "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
         "api_key_env": "DASHSCOPE_API_KEY",
@@ -65,6 +79,8 @@ openai_models_config = {
     
     # Ark 系列
     "ark-dipu": {
+        "key": "a",
+        "display_name": "迪普达达模型",
         "model_id": "bot-20250217100631-l4csl",
         "base_url": "https://ark.cn-beijing.volces.com/api/v3/bots",
         "api_key_env": "ARK_API_KEY",
@@ -72,6 +88,8 @@ openai_models_config = {
         "stream": True
     },
     "ark-deepseek": {
+        "key": "d",
+        "display_name": "深度求索Ark模型",
         "model_id": "ep-20250208175039-r6lmf",
         "base_url": "https://ark.cn-beijing.volces.com/api/v3",
         "api_key_env": "ARK_API_KEY",
@@ -79,11 +97,40 @@ openai_models_config = {
         "stream": True
     },
     "ark-doubao": {
+        "key": "c",
+        "display_name": "豆包256k模型",
         "model_id": "doubao-1-5-pro-256k-250115",
         "base_url": "https://ark.cn-beijing.volces.com/api/v3",
         "api_key_env": "ARK_API_KEY",
         "system_message": "你是迪普，是人工智能助手,用中文详细的回答每一个问题。",
         "stream": True
+    }
+}
+
+# 非OpenAI协议模型配置
+non_openai_models_config = {
+    # 通用配置（所有模型共享的默认值）
+    "default": {
+        "system_message": "你是迪普，是人工智能助手,用中文详细的回答每一个问题。",
+        "stream": True
+    },
+    
+    # Google Gemini配置
+    "gemini": {
+        "key": "g",
+        "model_id": "gemini-2.5-pro-exp-03-25",
+        "api_key_env": "GOOGLE_API_KEY",
+        "display_name": "Google Gemini模型"
+    },
+    
+    # Mistral配置
+    "mistral": {
+        "key": "m",
+        "model_id": "mistral-large-latest",
+        "api_key_env": "MISTRAL_API_KEY",
+        "display_name": "Mistral大模型",
+        "stream": False,
+        "history_limit": 10  # 历史记录限制
     }
 }
 
