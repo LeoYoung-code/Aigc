@@ -170,10 +170,11 @@ class Console:
             """根据当前状态渲染内容"""
             panels = []
             
-            # 思考面板
-            md_think = Markdown("**╰─❯ 🤔 思考内容输出:**\n\n" + think_text, code_theme="dracula")
-            panel_think = Panel(md_think, title="思考内容", border_style="blue")
-            panels.append(panel_think)
+            # 思考面板 - 只有在有思考内容时才显示
+            if think_text:
+                md_think = Markdown("**╰─❯ 🤔 思考内容输出:**\n\n" + think_text, code_theme="dracula")
+                panel_think = Panel(md_think, title="思考内容", border_style="blue")
+                panels.append(panel_think)
             
             # 结论面板（只在适当时显示）
             if thinking_complete and has_conclusion:
