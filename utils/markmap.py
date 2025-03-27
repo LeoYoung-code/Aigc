@@ -162,11 +162,11 @@ def markdown_to_markmap(markdown_text: str, prefix: str = "模型总结") -> Tup
         
         if result[0]:
             console.print("思维导图生成成功！", style="bold green")
-            # 尝试自动打开文件
-            if open_file(result[0]):
-                console.print("已自动打开思维导图", style="italic cyan")
-            else:
-                console.print(f"无法自动打开，请手动打开文件: {result[0]}", style="italic yellow")
+            # # 尝试自动打开文件
+            # if open_file(result[0]):
+            #     console.print("已自动打开思维导图", style="italic cyan")
+            # else:
+            #     console.print(f"无法自动打开，请手动打开文件: {result[0]}", style="italic yellow")
         else:
             console.print(f"思维导图生成失败: {result[2]}", style="bold red")
         

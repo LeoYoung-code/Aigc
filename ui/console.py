@@ -76,10 +76,10 @@ class Console:
     def create_progress(self, description: str = "处理中"):
         """创建进度条"""
         return Progress(
-            SpinnerColumn(),
-            TextColumn("[bold blue]{task.description}"),
-            BarColumn(),
-            TextColumn("[bold]{task.percentage:>3.0f}%"),
+            SpinnerColumn(spinner_name="dots2", style="bold cyan"),
+            TextColumn("[bold cyan]{task.description}"),
+            BarColumn(bar_width=None, style="blue", complete_style="cyan bold", finished_style="green bold"),
+            TextColumn("[bold cyan]{task.percentage:>3.0f}%"),
             TimeElapsedColumn(),
             console=self._console
         )
