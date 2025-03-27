@@ -2,7 +2,7 @@
 模型基类和接口定义
 """
 from abc import ABC, abstractmethod
-from typing import Dict, Any, Optional, List, Union
+from typing import Dict, Any, Optional, List
 
 
 class ModelInterface(ABC):
@@ -19,7 +19,7 @@ class ModelInterface(ABC):
         pass
     
     @abstractmethod
-    def request(self, content: Optional[str] = None, **kwargs) -> str:
+    def req_model(self, content: Optional[str] = None, **kwargs) -> str:
         """同步请求模型响应"""
         pass
 
@@ -69,9 +69,9 @@ class BaseModel(ModelInterface):
             模型响应
         """
         # 默认实现调用同步方法，子类可重写提供真正的异步实现
-        return self.request(content, **kwargs)
+        return self.req_model(content, **kwargs)
     
-    def request(self, content: Optional[str] = None, **kwargs) -> str:
+    def req_model(self, content: Optional[str] = None, **kwargs) -> str:
         """
         请求模型响应
         

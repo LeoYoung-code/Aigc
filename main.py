@@ -4,19 +4,18 @@
 
 支持多种大语言模型，提供命令行交互界面
 """
-import sys
 import traceback
 import asyncio
+from typing import Any
 
 import config
 from ui.console import Console
 from core.args import ArgumentParser
 from core.registry import ModelRegistry
-from core.utils import run_async
 from utils.markmap import markdown_to_markmap
 
 # 导入所有模型，确保它们被注册
-import models.openai_models
+import models
 
 
 def create_mind_map(response: str) -> None:
@@ -30,7 +29,15 @@ def create_mind_map(response: str) -> None:
         return
     
     try:
-        markdown_to_markmap(response)
+        # 将原始响应发送给C模型（豆包256k）进行整理
+        console = Console()
+        console.print("正在将内容整理为思维导图...", style="bold cyan")
+        
+        # 使用run_model方法调用C模型，并传入原始响应作为输入
+        mind_map_content = run_model("c", False, f"请将以下内容整理为一个结构化的思维导图内容:\n\n{response}")
+        
+        # 使用处理后的内容创建思维导图
+        markdown_to_markmap(mind_map_content)
     except Exception as e:
         console = Console()
         console.print(f"创建思维导图失败: {e}", style="bold red")
@@ -76,13 +83,14 @@ async def run_async_model(model_key: str, is_mind: bool) -> None:
             console.print(traceback.format_exc(), style="dim red")
 
 
-def run_model(model_key: str, is_mind: bool) -> None:
+def run_model(model_key: str, is_mind: bool, content: str = None) -> Any | None:
     """
     同步运行模型
-    
+
     Args:
         model_key: 模型标识符
         is_mind: 是否生成思维导图
+        content: 模型输入内容，默认为None表示从标准输入获取
     """
     console = Console()
     registry = ModelRegistry()
@@ -90,16 +98,18 @@ def run_model(model_key: str, is_mind: bool) -> None:
     try:
         # 创建模型实例
         instance = registry.create_instance(model_key)
-        
+
         # 初始化模型
         instance.initialize()
-        
+
         # 请求模型响应
-        response = instance.request(None)
+        response = instance.req_model(content)
         
         # 如果启用了思维导图模式，创建思维导图
         if is_mind and response:
             create_mind_map(response)
+
+        return response
             
     except KeyboardInterrupt:
         console.print("\n检测到用户终止操作，Bye😊！", style="bold yellow")
