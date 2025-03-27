@@ -8,7 +8,7 @@ from typing import Optional
 import google.generativeai as genai
 
 # Mistral
-from mistralai.client import MistralClient
+from mistralai import Mistral
 
 from core.model import BaseModel
 from core.registry import register_model
@@ -77,7 +77,7 @@ class MistralModel(BaseModel):
             raise ValueError(f"环境变量 {api_key_env} 未设置，无法调用Mistral模型")
         
         # 创建Mistral客户端
-        self.client = MistralClient(api_key=api_key)
+        self.client = Mistral(api_key=api_key)
         
         # 设置系统消息
         self.system_message = self._model_config.get(
@@ -106,7 +106,7 @@ class MistralModel(BaseModel):
             
             # 设置参数
             model_id = self._model_config.get("model_id", "mistral-large-latest")
-            stream = kwargs.get("stream", True)
+            stream = kwargs.get("stream", False)
             
             if stream:
                 # 流式请求
@@ -117,7 +117,7 @@ class MistralModel(BaseModel):
                 return print_stream(response_stream)
             else:
                 # 非流式请求
-                response = self.client.chat(
+                response = self.client.chat.complete(
                     model=model_id,
                     messages=messages
                 )

@@ -2,4 +2,5 @@
 *.xml
 *.idea/
 *.pyc
+*.vscode/
 /resource/md_cache/
