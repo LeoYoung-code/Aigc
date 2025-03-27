@@ -109,6 +109,31 @@ def print_conclusion(content: str) -> str:
     markdown_print(content, header="📒结论输出", header_color="yellow", end="\n")
     return content
 
+def markdown_stream(chunks):
+    """
+    流式渲染Markdown内容
+    
+    Args:
+        chunks: Markdown内容块
+        
+    Returns:
+        完整内容
+    """
+    response = ""
+    
+    def render_content():
+        """渲染内容"""
+        md = Markdown("**╰─❯ 📒 结论输出:**\n\n" + response, code_theme="dracula")
+        panel = Panel(md, title="结论", border_style="blue")
+        return panel
+    
+    with Live(render_content(), refresh_per_second=4, auto_refresh=False, vertical_overflow="crop_above") as live:
+        for chunk in chunks:
+            if hasattr(chunk, 'text'):
+                response += chunk.text
+                live.update(render_content(), refresh=True)
+    
+    return response 
 
 def print_stream(stream) -> str:
     """
@@ -181,30 +206,3 @@ def print_stream(stream) -> str:
     
     # 返回结论
     return conclusion_text
-
-
-def markdown_stream(chunks):
-    """
-    流式渲染Markdown内容
-    
-    Args:
-        chunks: Markdown内容块
-        
-    Returns:
-        完整内容
-    """
-    response = ""
-    
-    def render_content():
-        """渲染内容"""
-        md = Markdown("**╰─❯ 📒 结论输出:**\n\n" + response, code_theme="dracula")
-        panel = Panel(md, title="结论", border_style="blue")
-        return panel
-    
-    with Live(render_content(), refresh_per_second=4, auto_refresh=False, vertical_overflow="crop_above") as live:
-        for chunk in chunks:
-            if hasattr(chunk, 'text'):
-                response += chunk.text
-                live.update(render_content(), refresh=True)
-    
-    return response 
