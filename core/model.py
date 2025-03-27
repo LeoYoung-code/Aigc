@@ -48,7 +48,7 @@ class BaseModel(ModelInterface):
         if not self.initialized:
             self._initialize()
             self.initialized = True
-            print(f"正在使用{self._model_config.get('display_name', '未知模型')}")
+            # print(f"正在使用{self._model_config.get('display_name', '未知模型')}")
     
     def _initialize(self) -> None:
         """

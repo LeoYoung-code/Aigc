@@ -12,10 +12,12 @@ from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TimeEl
 from rich.console import Group
 
 
+
 # 类型定义
 PrintType = Literal["ok", "warn", "info", "error", "sigint", "exit", "changelog"]
 HeaderColor = Literal["green", "yellow", "blue", "red", "white", "cyan"]
 
+_CONSOLE = RichConsole()
 
 class Console:
     """增强的控制台类，提供丰富的输出功能"""
@@ -37,14 +39,42 @@ class Console:
         self._console.print(f"\n{text}", style=style)
     
     def print_divider(self, text: str = "这是一条分割线", style: str = "yellow bold"):
-        """打印分隔线"""
+        #  自动获取终端的列数
         terminal_width = shutil.get_terminal_size().columns
+
+        # 计算左右两侧分割线的长度
         left_length = (terminal_width - len(text) - 2) // 2
         right_length = terminal_width - left_length - len(text) - 2
+
+        # 生成左右两侧的分割线
         left_line = "=" * left_length
-        right_line = "=" * right_length
+        right_line = "=" * (right_length -  len(text))
+
+        # 组合分割线和文本
         output_text = f"{left_line} {text} {right_line}"
-        self._console.print(Text(output_text, style=style))
+
+        # 打印输出
+        _CONSOLE.print(Text(output_text, style))
+
+
+
+    def print_parting_line(self, text: str = "这是一条分割线"):
+        # 自动获取终端的列数
+        terminal_width = shutil.get_terminal_size().columns
+
+        # 计算左右两侧分割线的长度
+        left_length = (terminal_width - len(text) - 2) // 2
+        right_length = terminal_width - left_length - len(text) - 2
+
+        # 生成左右两侧的分割线
+        left_line = "=" * left_length
+        right_line = "=" * (right_length -  len(text))
+
+        # 组合分割线和文本
+        output_text = f"{left_line} {text} {right_line}"
+
+        # 打印输出
+        _CONSOLE.print(Text(output_text, style="yellow  bold"))
     
     def create_progress(self, description: str = "处理中"):
         """创建进度条"""
