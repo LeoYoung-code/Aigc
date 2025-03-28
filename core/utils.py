@@ -27,38 +27,10 @@ def get_input(conclusion: Optional[str] = None) -> str:
     lines = []
     
     while True:
-        try:
             line = input()
             if not line:  # 检测到空行时终止                                                                                                                                                                                                                                                                                      
                 break
             lines.append(line)
-        except KeyboardInterrupt:
-            console.print("\n检测到用户终止操作，Bye😊！", style="bold yellow")
-            sys.exit(0)
-            
-    # 使用动画效果显示等待提示
-    from rich.live import Live
-    from rich.text import Text
-    from rich.spinner import Spinner
-    from rich.console import Group
-    from rich.panel import Panel
-    import time
-    
-    # 创建等待动画
-    spinner = Spinner("dots2", "⌛️ 等待中")
-    panel = Panel(
-        Group(
-            Text("输入结束", style="bold cyan"),
-            Text("AI正在思考您的问题...", style="italic cyan")
-        ),
-        title="请稍候",
-        border_style="cyan"
-    )
-    
-    # 显示动画 (短暂显示1秒)
-    with Live(Group(spinner, panel), refresh_per_second=10, transient=True) as live:
-        time.sleep(1)
-    
     console.print("\n" * 1 + "输入结束, ⌛️请等待回答...", style="italic cyan")
     return '\n'.join(lines)
 

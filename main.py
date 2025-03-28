@@ -8,6 +8,7 @@ import traceback
 import asyncio
 from typing import Any, Optional
 from functools import wraps
+import shutil
 
 import config
 from ui.console import Console
@@ -32,13 +33,15 @@ def handle_exceptions(func):
         try:
             return func(*args, **kwargs)
         except KeyboardInterrupt:
-            console.print("\n检测到用户终止操作，Bye😊！", style="bold yellow")
+            console.print("\n[bold yellow]⚠️ 检测到用户终止操作，Bye😊！[/bold yellow]", style="on black")
         except ValueError as e:
-            console.print(f"错误: {e}", style="bold red")
+            console.print(f"[bold red]❌ 输入错误:[/bold red] {e}", style="on black")
         except Exception as e:
-            console.print(f"发生错误: {e}", style="bold red")
+            console.print(f"[bold red]🔥 系统错误:[/bold red] {e}", style="on black")
             if config.ADVANCED_SETTINGS.get("debug", False):
+                console.print(f"[dim red]{'='*50}\n调试信息:[/dim red]", style="on black")
                 console.print(traceback.format_exc(), style="dim red")
+                console.print(f"[dim red]{'='*50}[/dim red]", style="on black")
         return None
     
     @wraps(func)
@@ -46,13 +49,15 @@ def handle_exceptions(func):
         try:
             return await func(*args, **kwargs)
         except KeyboardInterrupt:
-            console.print("\n检测到用户终止操作，Bye😊！", style="bold yellow")
+            console.print("\n[bold yellow]⚠️ 检测到用户终止操作，Bye😊！[/bold yellow]", style="on black")
         except ValueError as e:
-            console.print(f"错误: {e}", style="bold red")
+            console.print(f"[bold red]❌ 输入错误:[/bold red] {e}", style="on black")
         except Exception as e:
-            console.print(f"发生错误: {e}", style="bold red")
+            console.print(f"[bold red]🔥 系统错误:[/bold red] {e}", style="on black")
             if config.ADVANCED_SETTINGS.get("debug", False):
+                console.print(f"[dim red]{'='*50}\n调试信息:[/dim red]", style="on black")
                 console.print(traceback.format_exc(), style="dim red")
+                console.print(f"[dim red]{'='*50}[/dim red]", style="on black")
         return None
         
     return async_wrapper if asyncio.iscoroutinefunction(func) else sync_wrapper
@@ -74,11 +79,14 @@ def create_mind_map(response: str) -> None:
         
         # 使用run_model方法调用C模型，并传入原始响应作为输入
         mind_map_content = run_model("c", False, f"请将以下内容整理为一个结构化的思维导图内容:\n\n{response}")
-        
+
+        # 显示成功提示
+        console.print("[bold green]✨ 思维导图生成完成！[/bold green]", style="on black")
+
         # 使用处理后的内容创建思维导图
         markdown_to_markmap(mind_map_content)
     except Exception as e:
-        console.print(f"创建思维导图失败: {e}", style="bold red")
+        console.print(f"[bold red]🔥 创建思维导图失败:[/bold red] {e}", style="on black")
         if config.ADVANCED_SETTINGS.get("debug", False):
             console.print(traceback.format_exc(), style="dim red")
 
@@ -115,7 +123,7 @@ async def run_async_model(model_key: str, is_mind: bool) -> None:
     with console.create_progress() as progress:
         task = progress.add_task("正在处理请求...", total=None)
         response = await instance.request_async(None)
-        progress.update(task, completed=100)
+        progress.update(task, completed=100, description="[bold green]✓ 思考完成！")
     
     # 如果启用了思维导图模式，创建思维导图
     if is_mind and response:
@@ -165,13 +173,18 @@ def main() -> None:
 
 if __name__ == "__main__":
     # 显示欢迎信息
-    console.print_divider(f"{config.APP_INFO['name']} v{config.APP_INFO['version']}")
+    app_title = f"{config.APP_INFO['name']} v{config.APP_INFO['version']}"
+    terminal_width = shutil.get_terminal_size().columns
+    
+    # 创建装饰性标题
+    console.print("\n", style="bold")
+    console._console.rule(f"[bold cyan]{app_title}[/bold cyan]", style="cyan")
     
     try:
         main()
     except KeyboardInterrupt:
-        console.print("\n程序已退出", style="bold yellow")
+        console.print("\n[bold yellow]👋 程序已退出[/bold yellow]", style="on black")
     except Exception as e:
-        console.print(f"程序异常: {e}", style="bold red")
+        console.print(f"[bold red]❌ 程序异常:[/bold red] {e}", style="on black")
         if config.ADVANCED_SETTINGS.get("debug", False):
             console.print(traceback.format_exc(), style="dim red")
