@@ -65,8 +65,8 @@ class ArkDipu(OpenAICompatibleModel):
     pass
 
 
-@model_config_register("ark-deepseek")
-class ArkDeepSeek(OpenAICompatibleModel):
+@model_config_register("ark-deepseek-r1")
+class ArkDeepSeekR1(OpenAICompatibleModel):
     """Ark-DeepSeek模型"""
     pass
 
@@ -75,3 +75,8 @@ class ArkDeepSeek(OpenAICompatibleModel):
 class ArkDouBao(OpenAICompatibleModel):
     """Ark-DouBao模型"""
     pass 
+
+@model_config_register("ark-deepseek-v3")
+class ArkDeepSeekV3(OpenAICompatibleModel):
+    """Ark-DeepSeek模型"""
+    pass
