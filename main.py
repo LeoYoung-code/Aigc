@@ -78,7 +78,7 @@ def create_mind_map(response: str) -> None:
         console.print("正在将内容整理为思维导图...", style="bold cyan")
         
         # 使用run_model方法调用C模型，并传入原始响应作为输入
-        mind_map_content = run_model("c", False, f"请将以下内容整理为一个结构化的思维导图内容:\n\n{response}")
+        mind_map_content = run_model(config.MODEL_GENERATE_MIND, False, f"请将以下内容整理为一个结构化的思维导图内容:\n\n{response}")
 
         # 显示成功提示
         console.print("[bold green]✨ 思维导图生成完成！[/bold green]", style="on black")

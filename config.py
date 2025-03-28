@@ -135,7 +135,7 @@ non_openai_models_config = {
 }
 
 # 默认使用的脑图生成模型
-MODEL_GENERATE_MIND = "e"  # Moonshot
+MODEL_GENERATE_MIND = "c"  
 
 # 终端颜色配置
 COLORS = {
