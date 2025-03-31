@@ -80,3 +80,8 @@ class ArkDouBao(OpenAICompatibleModel):
 class ArkDeepSeekV3(OpenAICompatibleModel):
     """Ark-DeepSeek模型"""
     pass
+
+@model_config_register("gemini-pro")
+class GeminiPro(OpenAICompatibleModel):
+    """Gemini-Pro模型"""
+    pass

@@ -35,6 +35,17 @@ openai_models_config = {
         "stream": True
     },
     
+    # Gemini 系列
+    "gemini-pro": {
+        "key": "g",
+        "model_id": "gemini-2.5-pro-exp-03-25",
+        "api_key_env": "GOOGLE_API_KEY",
+        "display_name": "Google Gemini模型",
+        "base_url": "https://generativelanguage.googleapis.com/v1beta/openai/",
+        "system_message": "你是迪普，是人工智能助手,用中文详细的回答每一个问题。",
+        "stream": True
+    },
+    
     # OpenAI 系列
     "gpt-4o-mini": {
         "key": "j",
@@ -122,14 +133,6 @@ non_openai_models_config = {
     "default": {
         "system_message": "你是迪普，是人工智能助手,用中文详细的回答每一个问题。",
         "stream": True
-    },
-    
-    # Google Gemini配置
-    "gemini": {
-        "key": "g",
-        "model_id": "gemini-2.5-pro-exp-03-25",
-        "api_key_env": "GOOGLE_API_KEY",
-        "display_name": "Google Gemini模型"
     },
     
     # Mistral配置

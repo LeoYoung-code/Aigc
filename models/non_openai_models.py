@@ -38,42 +38,42 @@ def get_model_config(model_name: str, key: str, default=None):
     return default
 
 
-@model_config_register("gemini")
-class Gemini(BaseModel):
-    """Google Gemini模型实现"""
+# @model_config_register("gemini")
+# class Gemini(BaseModel):
+#     """Google Gemini模型实现"""
     
-    def _initialize(self) -> None:
-        """初始化Gemini模型"""
-        api_key_env = self._model_config.get("api_key_env")
-        api_key = get_env_var(api_key_env)
+#     def _initialize(self) -> None:
+#         """初始化Gemini模型"""
+#         api_key_env = self._model_config.get("api_key_env")
+#         api_key = get_env_var(api_key_env)
         
-        if not api_key:
-            raise ValueError(f"环境变量 {api_key_env} 未设置，无法调用Gemini模型")
+#         if not api_key:
+#             raise ValueError(f"环境变量 {api_key_env} 未设置，无法调用Gemini模型")
         
-        # 配置Gemini
-        genai.configure(api_key=api_key)
+#         # 配置Gemini
+#         genai.configure(api_key=api_key)
         
-        # 创建模型
-        model_id = self._model_config.get("model_id", get_model_config("gemini", "model_id"))
-        self.model = genai.GenerativeModel(model_id)
+#         # 创建模型
+#         model_id = self._model_config.get("model_id", get_model_config("gemini", "model_id"))
+#         self.model = genai.GenerativeModel(model_id)
     
-    def _request_implementation(self, content: str, **kwargs) -> str:
-        """实现Gemini请求"""
-        try:
-            # 根据参数决定是否使用流式输出
-            stream = kwargs.get("stream", get_model_config("gemini", "stream"))
+#     def _request_implementation(self, content: str, **kwargs) -> str:
+#         """实现Gemini请求"""
+#         try:
+#             # 根据参数决定是否使用流式输出
+#             stream = kwargs.get("stream", get_model_config("gemini", "stream"))
             
-            if stream:
-                response = self.model.generate_content(content, stream=True)
-                return markdown_stream(response)
-            else:
-                response = self.model.generate_content(content)
-                return print_conclusion(response.text)
+#             if stream:
+#                 response = self.model.generate_content(content, stream=True)
+#                 return markdown_stream(response)
+#             else:
+#                 response = self.model.generate_content(content)
+#                 return print_conclusion(response.text)
                 
-        except Exception as e:
-            error_message = f"Gemini模型调用失败: {str(e)}"
-            print(error_message)
-            return error_message
+#         except Exception as e:
+#             error_message = f"Gemini模型调用失败: {str(e)}"
+#             print(error_message)
+#             return error_message
 
 
 @model_config_register("mistral")

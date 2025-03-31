@@ -12,9 +12,7 @@ argparse>=1.4.0
 
 # 各AI模型SDK
 openai>=1.0.0
-google-generativeai>=0.3.0
 mistralai>=0.0.10
-cozepy>=0.0.10
 
 # 其他依赖
 protobuf~=4.25.1
