@@ -74,15 +74,6 @@ class ArgumentParser:
             help='\033[3m是否启用脑图模式\033[0m'
         )
         
-        # 添加-a或--async参数
-        parser.add_argument(
-            '-a', '--async',
-            action='store_true',
-            default=False,
-            dest='use_async',
-            help='\033[3m使用异步模式\033[0m'
-        )
-        
         # 添加自定义help选项
         parser.add_argument(
             '-h', '--help',
@@ -92,12 +83,12 @@ class ArgumentParser:
         
         return parser
     
-    def parse_args(self) -> Tuple[Optional[str], bool, bool]:
+    def parse_args(self) -> Tuple[Optional[str], bool, Optional[bool]]:
         """
         解析命令行参数
         
         Returns:
-            Tuple[Optional[str], bool, bool]: (模型标识符, 是否生成脑图, 是否使用异步模式)
+            Tuple[Optional[str], bool, Optional[bool]]: (模型标识符, 是否生成脑图, None)
         """
         from ui.console import Console
         console = Console()
@@ -106,24 +97,24 @@ class ArgumentParser:
         try:
             args = self.parser.parse_args()
         except SystemExit:
-            return None, False, False
+            return None, False, None
         
         # 处理help选项
         if args.help:
             self.parser._print_message("")
-            return None, False, False
+            return None, False, None
         
         # 检查是否提供了模型名称
         if not args.model_name:
             self.parser._print_message("")
-            return None, False, False
+            return None, False, None
         
         # 验证模型是否存在
         registry = ModelRegistry()
         if args.model_name not in registry._models:
             console.print(f"错误：未知模型代号 '{args.model_name}'", style="bold red")
             self.parser._print_message("")
-            return None, False, False
+            return None, False, None
         
         # 打印选择信息
         console.print(f"已选择模型：[bold green]{args.model_name}[/] "
@@ -132,7 +123,4 @@ class ArgumentParser:
         if args.mindmap:
             console.print("已启用脑图模式", style="bold yellow")
         
-        if args.use_async:
-            console.print("已启用异步模式", style="bold cyan")
-        
-        return args.model_name, args.mindmap, args.use_async 
+        return args.model_name, args.mindmap, None 

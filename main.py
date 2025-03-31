@@ -108,31 +108,6 @@ def initialize_model(model_key: str):
 
 
 @handle_exceptions
-async def run_async_model(model_key: str, is_mind: bool) -> None:
-    """
-    异步运行模型
-    
-    Args:
-        model_key: 模型标识符
-        is_mind: 是否生成思维导图
-    """
-    # 初始化模型
-    instance = initialize_model(model_key)
-    
-    # 异步请求模型响应
-    with console.create_progress() as progress:
-        task = progress.add_task("正在处理请求...", total=None)
-        response = await instance.request_async(None)
-        progress.update(task, completed=100, description="[bold green]✓ 思考完成！")
-    
-    # 如果启用了思维导图模式，创建思维导图
-    if is_mind and response:
-        create_mind_map(response)
-        
-    return response
-
-
-@handle_exceptions
 def run_model(model_key: str, is_mind: bool, content: str = None) -> Any | None:
     """
     同步运行模型
@@ -159,16 +134,13 @@ def main() -> None:
     """程序主入口"""
     # 解析命令行参数
     parser = ArgumentParser()
-    model_key, is_mind, use_async = parser.parse_args()
+    model_key, is_mind, _ = parser.parse_args()
     
     if model_key is None:
         return
     
-    # 根据不同模式运行
-    if use_async:
-        asyncio.run(run_async_model(model_key, is_mind))
-    else:
-        run_model(model_key, is_mind)
+    # 运行模型
+    run_model(model_key, is_mind)
 
 
 if __name__ == "__main__":
