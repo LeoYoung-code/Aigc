@@ -85,3 +85,8 @@ class ArkDeepSeekV3(OpenAICompatibleModel):
 class GeminiPro(OpenAICompatibleModel):
     """Gemini-Pro模型"""
     pass
+
+@model_config_register("ernie-x1-32k-preview")
+class ErnieX1(OpenAICompatibleModel):
+    """百度文心一言X1模型"""
+    pass

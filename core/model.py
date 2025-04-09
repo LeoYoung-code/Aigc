@@ -13,10 +13,6 @@ class ModelInterface(ABC):
         """初始化模型"""
         pass
     
-    @abstractmethod
-    async def request_async(self, content: str, **kwargs) -> str:
-        """异步请求模型响应"""
-        pass
     
     @abstractmethod
     def req_model(self, content: Optional[str] = None, **kwargs) -> str:
@@ -56,20 +52,7 @@ class BaseModel(ModelInterface):
         子类应该重写此方法实现具体的初始化逻辑
         """
         pass
-    
-    async def request_async(self, content: str, **kwargs) -> str:
-        """
-        异步请求模型响应
-        
-        Args:
-            content: 用户输入内容
-            **kwargs: 其他参数
-            
-        Returns:
-            模型响应
-        """
-        # 默认实现调用同步方法，子类可重写提供真正的异步实现
-        return self.req_model(content, **kwargs)
+
     
     def req_model(self, content: Optional[str] = None, **kwargs) -> str:
         """

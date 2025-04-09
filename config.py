@@ -38,9 +38,9 @@ openai_models_config = {
     # Gemini 系列
     "gemini-pro": {
         "key": "g",
+        "display_name": "Google Gemini模型",
         "model_id": "gemini-2.5-pro-exp-03-25",
         "api_key_env": "GOOGLE_API_KEY",
-        "display_name": "Google Gemini模型",
         "base_url": "https://generativelanguage.googleapis.com/v1beta/openai/",
         "system_message": "你是迪普，是人工智能助手,用中文详细的回答每一个问题。",
         "stream": True
@@ -84,6 +84,17 @@ openai_models_config = {
         "model_id": "deepseek-r1",
         "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
         "api_key_env": "DASHSCOPE_API_KEY",
+        "system_message": "你是迪普，是人工智能助手,用中文详细的回答每一个问题。",
+        "stream": True
+    },
+    
+    # 百度文心一言 系列
+    "ernie-x1-32k-preview": {
+        "key": "w",
+        "display_name": "百度文心一言X1(32K)大模型",
+        "model_id": "ernie-x1-32k-preview",
+        "base_url": "https://qianfan.baidubce.com/v2",
+        "api_key_env": "BAIDU_API_KEY",
         "system_message": "你是迪普，是人工智能助手,用中文详细的回答每一个问题。",
         "stream": True
     },
