@@ -12,6 +12,7 @@ from models.siliconFlow.siliconFlow import SiliconFlow
 from models.deepseek.deepseek_think import DeepSeek
 from models.dashscope.bailian import BaiLian
 from models.dashscope.qwqPlus import QwqPlus
+from models.baidu.baiduQianfan import BaiduQianfan
 
 # 定义类映射配置
 class_map_config: Dict[str, Type["ClassInterface"]] = {
@@ -27,6 +28,7 @@ class_map_config: Dict[str, Type["ClassInterface"]] = {
     "i": DeepSeek,
     "k": QwqPlus,
     "l": DeepSeekV3,
+    "m": BaiduQianfan,
 }
 
 
@@ -85,6 +87,14 @@ openai_models_config = {
         "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
         "api_key_env": "DASHSCOPE_API_KEY",
         "system_message": "你是迪普，是人工智能助手,用中文详细的回答每一个问题。",
+        "stream": True
+    },
+    
+    # 百度千帆 系列
+    "ernie-x1-32k-preview": {
+        "base_url": "https://qianfan.baidubce.com/v2",
+        "api_key_env": "BAIDU_API_KEY",
+        "system_message": "你是文心一言大模型，百度推出的大型语言模型，你更擅长中文的对话。你会为用户提供安全，有帮助，准确的回答。",
         "stream": True
     }
 }
